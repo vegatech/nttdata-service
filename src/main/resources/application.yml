@@ -28,5 +28,8 @@ spring:
     hibernate:
       ddl-auto: validate
     show-sql: false
-
+  liquibase:
+    enabled: true
+    change-log: classpath:db.changelog.xml
+    contexts: ${spring.profiles.active}
 
