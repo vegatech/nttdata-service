@@ -15,7 +15,7 @@ import java.util.UUID;
 public class ClientController {
 
     @Autowired
-    ClientService clientService;
+    private ClientService clientService;
 
     @PostMapping("/createClient")
     public ClientPresenter saveClient(@RequestBody ClientPresenter clientPresenter) throws IOException {
