@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface ClientService {
 
-    ClientPresenter saveClient(ClientPresenter clientPresenter) throws IOException;
+    ClientPresenter saveClient(ClientPresenter clientPresenter) ;
 
     Client getClientById(UUID clientId);
 

@@ -18,7 +18,7 @@ public class ClientController {
     private ClientService clientService;
 
     @PostMapping("/createClient")
-    public ClientPresenter saveClient(@RequestBody ClientPresenter clientPresenter) throws IOException {
+    public ClientPresenter saveClient(@RequestBody ClientPresenter clientPresenter) {
         return clientService.saveClient(clientPresenter);
     }
 

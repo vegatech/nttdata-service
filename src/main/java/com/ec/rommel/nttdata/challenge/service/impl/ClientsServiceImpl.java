@@ -29,7 +29,7 @@ public class ClientsServiceImpl implements ClientService {
 
     @Override
     @Transactional
-    public ClientPresenter saveClient(ClientPresenter clientPresenter) throws IOException{
+    public ClientPresenter saveClient(ClientPresenter clientPresenter) {
         Optional<Client> optionalClient = clientRepository.findByIdentification(clientPresenter.getIdentification());
         if (optionalClient.isPresent()) {
             throw new ValidationException("Client already exists");
