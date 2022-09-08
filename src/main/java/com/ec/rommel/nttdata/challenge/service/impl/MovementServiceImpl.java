@@ -41,7 +41,7 @@ public class MovementServiceImpl implements MovementService {
     }
 
     @Override
-    public MovementPresenter saveUpdateMovement(MovementPresenter movementPresenter) {
+    public MovementPresenter saveUpdateMovement(MovementPresenter movementPresenter)throws RuntimeException {
         Movement movement;
         UUID movementId = movementPresenter.getMovementId();
         if (movementPresenter.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
@@ -131,7 +131,7 @@ public class MovementServiceImpl implements MovementService {
                 .build();
     }
 
-    private BigDecimal calculateBalance(Movement movement) {
+    private BigDecimal calculateBalance(Movement movement) throws RuntimeException {
         AtomicReference<BigDecimal> balance = new AtomicReference<>(BigDecimal.ZERO);
         Optional<BankAccount> bankAccount = bankAccountRepository.findById(movement.getBankAccount().getBankAccountId());
         if (bankAccount.get().getMovements().isEmpty()) {
@@ -142,8 +142,9 @@ public class MovementServiceImpl implements MovementService {
                 balance.set(balance.get().subtract(movement.getAmount()));
             }
         }else {
-            BigDecimal in = new BigDecimal(bankAccount.get().getMovements().stream().filter(m -> m.getMovementType().equals(MovementType.INCOMING)).mapToDouble(m -> m.getAmount().doubleValue()).sum());
-            BigDecimal out = new BigDecimal(bankAccount.get().getMovements().stream().filter(m -> m.getMovementType().equals(MovementType.OUTGOING)).mapToDouble(m -> m.getAmount().doubleValue()).sum());
+
+            BigDecimal in = bankAccount.get().getMovements().stream().filter(m -> m.getMovementType().equals(MovementType.INCOMING)).map(m-> m.getAmount()).reduce(BigDecimal.ZERO,BigDecimal::add);
+            BigDecimal out = bankAccount.get().getMovements().stream().filter(m -> m.getMovementType().equals(MovementType.OUTGOING)).map(m-> m.getAmount()).reduce(BigDecimal.ZERO,BigDecimal::add);
             balance.set(bankAccount.get().getInitialBalance().add(in).subtract(out));
             if (movement.getMovementType().equals(MovementType.INCOMING)) {
                 balance.set(balance.get().add(movement.getAmount()));
